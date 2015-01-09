@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" [
+  <!ENTITY applicationName "salesnet">
+  <!ENTITY applicationGroup "org/lambert">
+  <!ENTITY applicationLogRootPath "logs">
+  <!ENTITY logpath "&applicationLogRootPath;/&applicationGroup;/&applicationName;">
+]
+>
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"
+	debug="true">
+
+	<!-- Make the debug log size-limited (tune the size as you need) -->
+	<appender name="debugAppender" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="&logpath;/debug.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd-HH" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="[Time:%d][Thread:%t][Level:%-5p][CorrelationId:%X{correlationId}] %c %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Organize the error log by date, do not discard -->
+	<appender name="errorAppender" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="&logpath;/error.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd-HH" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="[Time:%d][Thread:%t][Level:%-5p][CorrelationId:%X{correlationId}] %c %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="messageAppender" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="&logpath;/message.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd-HH" />
+		<param name="MaxFileSize" value="100MB" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="[Time:%d][Thread:%t][Level:%-5p][CorrelationId:%X{correlationId}] %c %m%n" />
+		</layout>
+	</appender>
+
+
+	<logger name="org.springframework" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="debugAppender" />
+	</logger>
+
+	<logger name="DEBUG.org.lambert" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="debugAppender" />
+	</logger>
+
+	<logger name="ERROR.org.lambert" additivity="false">
+		<level value="ERROR" />
+		<appender-ref ref="errorAppender" />
+	</logger>
+
+	<root>
+		<level value="WARN" />
+		<appender-ref ref="errorAppender" />
+	</root>
+
+</log4j:configuration>
