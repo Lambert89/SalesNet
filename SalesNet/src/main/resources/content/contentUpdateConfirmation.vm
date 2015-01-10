@@ -1,0 +1,11 @@
+Dear User,
+
+We have new stuff for you:
+
+  #foreach( $newStuff in $newsList )
+     $newStuff
+  #end
+  
+Please access $webUrl for more information.
+
+Thank you!
