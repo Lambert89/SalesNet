@@ -9,6 +9,7 @@
 	<configs>
 		<config>src/main/resources/org/lambert/salesnet/application-context.xml</config>
 		<config>src/main/resources/org/lambert/salesnet/servlet-context.xml</config>
+		<config>src/main/resources/org/lambert/salesnet/security-context.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>

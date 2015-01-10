@@ -15,7 +15,7 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<context:property-placeholder order="0"
-		location="classpath:/content/mail.properties" />
+		location="classpath:/content/mail.properties" ignore-unresolvable="true" />
 
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="${mail.host}" />
