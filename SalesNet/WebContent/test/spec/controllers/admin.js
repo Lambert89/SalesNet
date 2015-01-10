@@ -1,17 +1,17 @@
 'use strict';
 
-describe('Controller: MainCtrl', function () {
+describe('Controller: AdminCtrl', function () {
 
   // load the controller's module
   beforeEach(module('webContentApp'));
 
-  var MainCtrl,
+  var AdminCtrl,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    MainCtrl = $controller('MainCtrl', {
+    AdminCtrl = $controller('AdminCtrl', {
       $scope: scope
     });
   }));

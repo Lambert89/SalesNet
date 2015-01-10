@@ -14,6 +14,13 @@
 		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<context:component-scan base-package="org.lambert.salesnet" />
+	<context:component-scan base-package="org.lambert.salesnet.controllers" />
+
+	<mvc:annotation-driven />
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="2048000000" />
+	</bean>
 
 </beans>

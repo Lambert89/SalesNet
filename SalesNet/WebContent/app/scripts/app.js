@@ -10,5 +10,5 @@
  */
 angular
   .module('webContentApp', [
-    'ngMessages'
+    'ngMessages', 'angularFileUpload', 'oitozero.ngSweetAlert'
   ]);
