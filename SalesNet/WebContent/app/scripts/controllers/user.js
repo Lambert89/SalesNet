@@ -14,4 +14,6 @@ angular.module('webContentApp')
       'AngularJS',
       'Karma'
     ];
+  }).controller("ViewerCtrl", function($scope) {
+	  
   });

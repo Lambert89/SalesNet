@@ -1,11 +1,13 @@
-Dear User,
-
-We have new stuff for you:
-
+<div>
+<p>Dear User,</p>
+<br/>
+<p>We have new stuff for you:
+<br/>
   #foreach( $newStuff in $newsList )
-     $newStuff
+     <a href="$newStuff.value">$newStuff.key</a>
   #end
-  
-Please access $webUrl for more information.
-
-Thank you!
+ </p>
+<p>Please access $webUrl for more information.</p>
+<br/>
+<p>Thank you!</p>
+</div>
