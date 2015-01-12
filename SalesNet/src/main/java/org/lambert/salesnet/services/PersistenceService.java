@@ -1,5 +1,6 @@
 package org.lambert.salesnet.services;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,6 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
+import org.apache.commons.lang.SerializationUtils;
 import org.lambert.salesnet.beans.DocumentTracker;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -45,11 +47,13 @@ public class PersistenceService implements InitializingBean {
 		em.close();
 	}
 
-	public void updateObjects(final UpdateOperation updateOperation)
+	public <T> void updateObjects(final Class<T> objectClass,
+			final long primaryKey, final UpdateOperation<T> updateOperation)
 			throws Exception {
 		final EntityManager em = this.emf.createEntityManager();
 		em.getTransaction().begin();
-		updateOperation.update();
+		final T object = em.find(objectClass, primaryKey);
+		updateOperation.update(object);
 		em.getTransaction().commit();
 		em.close();
 	}
@@ -83,9 +87,11 @@ public class PersistenceService implements InitializingBean {
 	 * @param primaryKey
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T findObject(final Class<T> objectClass, final long primaryKey) {
 		final EntityManager em = this.emf.createEntityManager();
 		T result = em.find(objectClass, primaryKey);
+		result = ((T) SerializationUtils.clone((Serializable) result));
 		em.close();
 		return result;
 	}
@@ -113,11 +119,12 @@ public class PersistenceService implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (this.findObject(DocumentTracker.class, 1L) == null) {
+			System.out.println("Initializing singleton DocumentTracker");
 			this.saveObjects(new Object[] { new DocumentTracker() });
 		}
 	}
 
-	public static interface UpdateOperation {
-		public void update() throws Exception;
+	public static interface UpdateOperation<T> {
+		public void update(T object) throws Exception;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -13,7 +14,7 @@ import javax.persistence.Id;
 public class DocumentTracker implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	private long id = 1L;
 
@@ -37,6 +38,14 @@ public class DocumentTracker implements Serializable {
 		final List<String> result = new ArrayList<String>();
 		result.addAll(this.files.keySet());
 		return result;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 }

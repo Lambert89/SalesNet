@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,15 +68,17 @@ public class NavigationOrchistration {
 
 		final String realPath = request.getSession().getServletContext()
 				.getRealPath("/upload");
-		final DocumentTracker docTracker = this.persistenceService.findObject(
-				DocumentTracker.class, 1L);
+
+		System.out.println("realPath: " + realPath);
+
 		final List<NewDocument> newDocs = new ArrayList<NewDocument>();
 
-		this.persistenceService
-				.updateObjects(new PersistenceService.UpdateOperation() {
+		this.persistenceService.updateObjects(DocumentTracker.class, 1L,
+				new PersistenceService.UpdateOperation<DocumentTracker>() {
 
 					@Override
-					public void update() throws Exception {
+					public void update(DocumentTracker docTracker)
+							throws Exception {
 						for (final MultipartFile file : files) {
 							String originalFilename = file
 									.getOriginalFilename();
@@ -89,10 +92,15 @@ public class NavigationOrchistration {
 							newDoc.setUrl(NavigationOrchistration.this.baseUrl
 									+ "/api/download/" + originalFilename);
 							newDocs.add(newDoc);
+
+							System.out
+									.println("after upload -> getAllDocumentNames: "
+											+ docTracker.getAllDocumentNames()
+											+ " with id: " + docTracker.getId());
 						}
 					}
-				});
 
+				});
 		response.setContentType("text/plain; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println(true);
@@ -100,8 +108,9 @@ public class NavigationOrchistration {
 		this.persistenceService.saveObjects(newDocs.toArray());
 	}
 
-	@RequestMapping(value = "/documents", method = RequestMethod.GET)
-	public @ResponseBody Map<String, List<String>> getAllDocuments() {
+	@RequestMapping(value = "/documents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Map<String, List<String>> getAllDocuments()
+			throws Exception {
 		final DocumentTracker docTracker = this.persistenceService.findObject(
 				DocumentTracker.class, 1L);
 		final List<String> docNames = docTracker.getAllDocumentNames();
@@ -113,12 +122,25 @@ public class NavigationOrchistration {
 
 	@RequestMapping(value = "/download/{documentName}", method = RequestMethod.GET)
 	public void downloadDocument(@PathVariable String documentName,
-			final HttpServletResponse response) throws IOException {
+			final HttpServletResponse response) throws Exception {
+
+		System.out.println("Testing downloadDocument DocumentName: "
+				+ documentName);
+
 		final DocumentTracker docTracker = this.persistenceService.findObject(
 				DocumentTracker.class, 1L);
-		final String path = docTracker.getDocumentLocation(documentName);
+
+		System.out.println("Testing downloadDocument docTraker: " + docTracker
+				+ " with id: " + docTracker.getId());
+
+		System.out.println("during download -> getAllDocumentNames: "
+				+ docTracker.getAllDocumentNames());
+		final String filename = documentName.endsWith(".pdf") ? documentName
+				: documentName.concat(".pdf");
+
+		final String path = docTracker.getDocumentLocation(filename);
+		System.out.println("file path: " + path);
 		final File file = new File(path);
-		final String filename = file.getName();
 
 		try {
 			InputStream fis = new BufferedInputStream(new FileInputStream(path));
@@ -180,6 +202,7 @@ public class NavigationOrchistration {
 	public @ResponseBody String handleException(final Exception exception,
 			final HttpServletRequest request) {
 		_LOGGER.error("Spring MVC processing error", exception);
+		exception.printStackTrace();
 		return exception.getMessage();
 	}
 }
