@@ -22,7 +22,7 @@
 				<configuration>
 					<warSourceDirectory>WebContent</warSourceDirectory>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<warSourceIncludes>WEB-INF/*,META-INF/*,ViewerJS/*</warSourceIncludes>
+					<warSourceIncludes>WEB-INF/**,META-INF/**,ViewerJS/**</warSourceIncludes>
 					<webResources>
 						<resource>
 							<directory>WebContent/dist</directory>
@@ -129,4 +129,7 @@
 			<url>http://m2.objectdb.com</url>
 		</repository>
 	</repositories>
+	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 </project>

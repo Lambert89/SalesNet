@@ -15,7 +15,7 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<context:property-placeholder order="0"
-		location="file:${user.dir}/config.properties" ignore-unresolvable="true" />
+		location="file:${user.dir}/salesnet_config/config.properties" ignore-unresolvable="true" />
 
 	<context:component-scan base-package="org.lambert.salesnet.controllers" />
 
