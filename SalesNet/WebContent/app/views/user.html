@@ -1,5 +1,5 @@
 <div class="row" ng-controller="ViewerCtrl">
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<div ng-show="!isError">
 			<div>Documents Available As below, click to view more details:
 			</div>
@@ -11,8 +11,8 @@
 		</div>
 		<div ng-show="isError">Fail to retrieve documents!</div>
 	</div>
-	<div class="col-md-6" ng-show="documents.length > 0">
-		<iframe ng-src="{{previewDocumentUrl}}" width="600px" height="800px"
+	<div class="col-md-8" ng-show="documents.length > 0">
+		<iframe ng-src="{{previewDocumentUrl}}" width="700px" height="800px"
 			allowfullscreen webkitallowfullscreen></iframe>
 	</div>
 </div>
