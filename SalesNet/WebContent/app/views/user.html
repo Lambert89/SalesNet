@@ -1,8 +1,18 @@
-<div ng-show="!isError" ng-controller="ViewerCtrl">
-    <div>Documents Available As below, click to view more details: </div>
-	<div ng-repeat="document in documents">
-		<a ng-href="{{generateUrl(baseUrl, document)}}">{{document}}</a>
+<div class="row" ng-controller="ViewerCtrl">
+	<div class="col-md-6">
+		<div ng-show="!isError">
+			<div>Documents Available As below, click to view more details:
+			</div>
+			<div ng-repeat="document in documents">
+				<a ng-href="javascript:void"
+					ng-click="generateUrl(baseUrl, document, $event)">{{document}}</a>
+			</div>
+			<div ng-show="documents.length <= 0">No documents found.</div>
+		</div>
+		<div ng-show="isError">Fail to retrieve documents!</div>
 	</div>
-	<div ng-show="documents.length <= 0">No documents found.</div>
+	<div class="col-md-6" ng-show="documents.length > 0">
+		<iframe ng-src="{{previewDocumentUrl}}" width="600px" height="800px"
+			allowfullscreen webkitallowfullscreen></iframe>
+	</div>
 </div>
-<div ng-show="isError">Fail to retrieve documents!</div>
