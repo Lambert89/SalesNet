@@ -30,8 +30,14 @@ angular.module('webContentApp').controller('UserCtrl', function($scope) {
       controller: 'ModalInstanceCtrl'
     });
   };
-}).controller('ModalInstanceCtrl', function ($scope, $modalInstance) {
-  $scope.subscribe = function () {
-    alert("subscribed!");
+}).controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
+    $scope.subscribe = function (subscribeEmail) {
+	    console.debug("subscribeEmail: ", subscribeEmail);
+		var targetUrl = location.href.replace("index.html", "api/subscribe");
+        $http.post(targetUrl, {mailAddress: subscribeEmail}).success(function(data, status, headers, config) {
+            alert("successful!");
+        }).error(function(data, status, headers, config) {
+            alert("fail!");
+        });
   };
 });

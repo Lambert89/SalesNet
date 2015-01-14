@@ -33,6 +33,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -77,7 +78,7 @@ public class NavigationOrchistration {
             public void update(final DocumentTracker docTracker) throws Exception {
                 for (final MultipartFile file : files) {
                     String originalFilename = file.getOriginalFilename();
-					System.out.println("originalFilename: " + originalFilename);
+                    System.out.println("originalFilename: " + originalFilename);
                     FileUtils.copyInputStreamToFile(file.getInputStream(), new File(realPath, originalFilename));
                     docTracker.addDocument(originalFilename, realPath + "/" + originalFilename);
                     final NewDocument newDoc = new NewDocument();
@@ -146,15 +147,16 @@ public class NavigationOrchistration {
 
     @RequestMapping(value = "/subscribe", method = RequestMethod.POST)
     public @ResponseBody
-    String subscribe(final String mailAddress) throws Throwable {
-        String result = mailAddress;
+    String subscribe(@RequestBody final Map<String, String> body) throws Throwable {
+        String result = body.get("mailAddress");
+        System.out.println("mailAddress: " + body.get("mailAddress"));
         final User user = new User();
-        user.setMail(mailAddress);
+        user.setMail(body.get("mailAddress"));
         try {
-            this.persistenceService.saveObjects(new Object[] {mailAddress});
+            this.persistenceService.saveObjects(new Object[] {user});
             final Map<String, Object> model = new HashMap<String, Object>();
             model.put("webUrl", this.baseUrl);
-            this.mailService.sendSubscribeConfirmation(mailAddress, model);
+            this.mailService.sendSubscribeConfirmation(body.get("mailAddress"), model);
         } catch (Throwable e) {
             result = "";
             throw e;
