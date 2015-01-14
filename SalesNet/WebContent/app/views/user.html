@@ -1,4 +1,50 @@
 <div class="row" ng-controller="ViewerCtrl">
+    <div ng-controller="InterestModalCtrl">
+    <script type="text/ng-template" id="interestModal.html">
+        <div class="modal-body">
+            <tabset>
+                <tab heading="To Subscribe">
+                    <br>
+                    <div>
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="subscribeEmail">Email: </label>
+                                <div class="col-sm-10">
+                                    <input id="subscribeEmail1" class="form-control" type="mail" ng-model="subscribeEmail" required placeholder="please input your email"></input>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-primary" ng-click="subscribe()">Subscribe</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </tab>
+                <tab heading="Subscribed">
+                    <br>
+                    <div>
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="emailAddress">Email: </label>
+                                <div class="col-sm-10">
+                                    <input id="emailAddress" class="form-control" type="mail" ng-model="emailAddress" required placeholder="please input your email"></input>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-warning" ng-click="unsubscribe()">Unsubscribe</button>
+                                    <button type="submit" class="btn btn-info" ng-click="checkComments()">Check Comments</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+    </script>
+    <button class="btn btn-info btn-lg" style="border-radius: 20px;top: 120px;left: -15px;position: fixed;z-index: 10;float: left; text-align: right;" ng-click="open()">Try me!</button>
+</div>
 	<div class="col-md-4">
 		<div ng-show="!isError">
 			<div>Documents Available As below, click to view more details:

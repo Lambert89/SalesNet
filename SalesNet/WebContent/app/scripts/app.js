@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-angular.module('webContentApp', [ 'ngMessages', 'angularFileUpload', 'oitozero.ngSweetAlert' ]).config(
+angular.module('webContentApp', [ 'ngMessages', 'angularFileUpload', 'oitozero.ngSweetAlert', 'ui.bootstrap' ]).config(
     function($sceDelegateProvider){
     	$sceDelegateProvider.resourceUrlWhitelist(['self']);
     });

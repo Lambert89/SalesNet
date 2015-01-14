@@ -23,4 +23,15 @@ angular.module('webContentApp').controller('UserCtrl', function($scope) {
 	}).error(function(data, status, headers, config) {
 		$scope.isError = true;
 	});
+}).controller('InterestModalCtrl', function ($scope, $modal) {
+  $scope.open = function (size) {
+    var modalInstance = $modal.open({
+      templateUrl: 'interestModal.html',
+      controller: 'ModalInstanceCtrl'
+    });
+  };
+}).controller('ModalInstanceCtrl', function ($scope, $modalInstance) {
+  $scope.subscribe = function () {
+    alert("subscribed!");
+  };
 });
