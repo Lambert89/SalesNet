@@ -88,7 +88,7 @@ public class PersistenceService implements InitializingBean {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T findObject(final Class<T> objectClass, final long primaryKey) {
+	public <T> T findObject(final Class<T> objectClass, final Object primaryKey) {
 		final EntityManager em = this.emf.createEntityManager();
 		T result = em.find(objectClass, primaryKey);
 		result = ((T) SerializationUtils.clone((Serializable) result));

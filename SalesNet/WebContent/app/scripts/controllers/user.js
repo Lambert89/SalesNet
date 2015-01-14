@@ -29,15 +29,54 @@ angular.module('webContentApp').controller('UserCtrl', function($scope) {
       templateUrl: 'interestModal.html',
       controller: 'ModalInstanceCtrl'
     });
+    modalInstance.result.then(function(teardown) {
+        teardown();
+    });
   };
-}).controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
+}).controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http, $interval) {
     $scope.subscribe = function (subscribeEmail) {
-	    console.debug("subscribeEmail: ", subscribeEmail);
-		var targetUrl = location.href.replace("index.html", "api/subscribe");
+        $scope.isEnabled = false;
+        $scope.isSuccess = false;
+        $scope.isFailed = false;
+        $scope.isProcessing = true;
+	console.debug("subscribeEmail: ", subscribeEmail);
+        var targetUrl = location.href.replace("index.html", "api/subscribe");
         $http.post(targetUrl, {mailAddress: subscribeEmail}).success(function(data, status, headers, config) {
-            alert("successful!");
+            console.log("success!");
+            console.debug("data: ", data);
+            console.debug("status: ", status);
+            console.debug("headers: ", headers);
+            console.debug("config: ", config);
+            $scope.isSuccess = true;
+            $scope.isFailed = false;
+            $scope.isProcessing = false;
+            $scope.timeRemain = 3;
+            var interval = $interval(function(){
+                if($scope.timeRemain === 0) {
+                    $modalInstance.close(function() {
+                        $scope.isSuccess = false;
+                        $scope.isFailed = false;
+                        $scope.isProcessing = false;
+                    });
+                    $interval.cancel( interval );
+                }
+                $scope.timeRemain = $scope.timeRemain-1;
+                console.debug("$scope.timeRemain", $scope.timeRemain);
+            },1000);
         }).error(function(data, status, headers, config) {
-            alert("fail!");
+            console.log("failed!");
+            console.debug("data: ", data);
+            console.debug("status: ", status);
+            console.debug("headers: ", headers);
+            console.debug("config: ", config);
+            $scope.isFailed = true;
+            $scope.isSuccess = false;
+            $scope.isProcessing = false;
         });
+        console.debug("$modalInstance", $modalInstance);
   };
+  $scope.isEnabled = true;
+  $scope.isProcessing = false;
+  $scope.isSuccess = false;
+  $scope.isFailed = false;
 });
