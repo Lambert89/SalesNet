@@ -6,19 +6,27 @@
                 <tab heading="To Subscribe">
                     <br>
                     <div>
-                        <form class="form-horizontal" id="subscribeForm">
+                        <form class="form-horizontal" name="subscribeForm" novalidate ng-submit="subscribe(subscribeEmail)">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label" for="subscribeEmail">Email: </label>
                                 <div class="col-sm-10">
-                                    <input id="subscribeEmail1" ng-enabled="isEnabled" class="form-control" type="mail" ng-model="subscribeEmail" name="subscribeEmailInput" required placeholder="please input your email"></input>
+                                    <input id="subscribeEmail1" ng-enabled="isEnabled" class="form-control" type="email" ng-model="subscribeEmail" name="subscribeEmailInput" required placeholder="please input your email"></input>
                                     <alert ng-show="isProcessing">Processing...</alert>
                                     <alert type="success" ng-show="isSuccess">Success! Closing in {{timeRemain}} seconds.</alert>
                                     <alert type="danger" ng-show="isFailed">Failed!</alert>
                                 </div>
                             </div>
+                            <div ng-show="subscribeForm.subscribeEmailInput.$dirty" ng-messages="subscribeForm.subscribeEmailInput.$error">
+                                <div ng-message="required">
+                                    <alert type="danger">Please make sure you input email address!</alert>
+                                </div>
+                                <div ng-message="email">
+                                    <alert type="danger">Please make sure you input valid email address format!</alert>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
-                                    <button type="submit" ng-enabled="isEnabled && subscribeForm.subscribeEmailInput.$valid" class="btn btn-primary" ng-click="subscribe(subscribeEmail)">Subscribe</button>
+                                    <button type="submit" ng-disabled="subscribeForm.subscribeEmailInput.$invalid" class="btn btn-primary">Subscribe</button>
                                 </div>
                             </div>
                         </form>
