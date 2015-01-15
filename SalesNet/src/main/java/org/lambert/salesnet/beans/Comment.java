@@ -27,8 +27,6 @@ public class Comment implements Serializable {
 
     private String comment;
 
-    private FollowUp followUp;
-
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
@@ -82,21 +80,6 @@ public class Comment implements Serializable {
      */
     public long getId() {
         return this.id;
-    }
-
-    /**
-     * @return the followUp
-     */
-    public FollowUp getFollowUp() {
-        return this.followUp;
-    }
-
-    /**
-     * @param followUp
-     *            the followUp to set
-     */
-    public void setFollowUp(final FollowUp followUp) {
-        this.followUp = followUp;
     }
 
 }
