@@ -17,69 +17,59 @@ import javax.persistence.TemporalType;
 @Entity
 public class Comment implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue
-    private long id;
+	@Id
+	private String mail;
 
-    private String mail;
+	private String comment;
 
-    private String comment;
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date date;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+	/**
+	 * @return the mail
+	 */
+	public String getMail() {
+		return this.mail;
+	}
 
-    /**
-     * @return the mail
-     */
-    public String getMail() {
-        return this.mail;
-    }
+	/**
+	 * @param mail
+	 *            the mail to set
+	 */
+	public void setMail(final String mail) {
+		this.mail = mail;
+	}
 
-    /**
-     * @param mail
-     *            the mail to set
-     */
-    public void setMail(final String mail) {
-        this.mail = mail;
-    }
+	/**
+	 * @return the comment
+	 */
+	public String getComment() {
+		return this.comment;
+	}
 
-    /**
-     * @return the comment
-     */
-    public String getComment() {
-        return this.comment;
-    }
+	/**
+	 * @param comment
+	 *            the comment to set
+	 */
+	public void setComment(final String comment) {
+		this.comment = comment;
+	}
 
-    /**
-     * @param comment
-     *            the comment to set
-     */
-    public void setComment(final String comment) {
-        this.comment = comment;
-    }
+	/**
+	 * @return the date
+	 */
+	public Date getDate() {
+		return this.date;
+	}
 
-    /**
-     * @return the date
-     */
-    public Date getDate() {
-        return this.date;
-    }
-
-    /**
-     * @param date
-     *            the date to set
-     */
-    public void setDate(final Date date) {
-        this.date = date;
-    }
-
-    /**
-     * @return the id
-     */
-    public long getId() {
-        return this.id;
-    }
+	/**
+	 * @param date
+	 *            the date to set
+	 */
+	public void setDate(final Date date) {
+		this.date = date;
+	}
 
 }

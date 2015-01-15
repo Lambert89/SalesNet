@@ -48,7 +48,7 @@ public class PersistenceService implements InitializingBean {
 	}
 
 	public <T> void updateObjects(final Class<T> objectClass,
-			final long primaryKey, final UpdateOperation<T> updateOperation)
+			final Object primaryKey, final UpdateOperation<T> updateOperation)
 			throws Exception {
 		final EntityManager em = this.emf.createEntityManager();
 		em.getTransaction().begin();
@@ -105,12 +105,14 @@ public class PersistenceService implements InitializingBean {
 	 * @param objects
 	 */
 	public <T> void deleteObjects(final Class<T> objectClass,
-			final long[] primaryKeys) {
+			final Object[] primaryKeys) {
 		final EntityManager em = this.emf.createEntityManager();
 		em.getTransaction().begin();
-		for (final long primaryKey : primaryKeys) {
+		for (final Object primaryKey : primaryKeys) {
 			final Object obj = em.find(objectClass, primaryKey);
-			em.remove(obj);
+			if (null != obj) {
+				em.remove(obj);
+			}
 		}
 		em.getTransaction().commit();
 		em.close();

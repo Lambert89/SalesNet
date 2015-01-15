@@ -30,7 +30,7 @@ angular.module('webContentApp').controller('UserCtrl', function($scope) {
 				$scope.isError = true;
 			});
 		}).controller('InterestModalCtrl', function($scope, $modal) {
-	$scope.open = function(size) {
+	$scope.open = function() {
 		var modalInstance = $modal.open({
 			templateUrl : 'interestModal.html',
 			controller : 'ModalInstanceCtrl'
@@ -42,8 +42,50 @@ angular.module('webContentApp').controller('UserCtrl', function($scope) {
 }).controller(
 		'ModalInstanceCtrl',
 		function($scope, $modalInstance, $http, $interval) {
+			$scope.unsubscribe = function(unsubscribeEmail) {
+				$scope.isEnabled = false;
+				$scope.isSuccess = false;
+				$scope.isFailed = false;
+				$scope.isProcessing = true;
+				var targetUrl = location.href.replace("index.html",
+						"api/unsubscribe");
+				$http.post(targetUrl, {
+					unsubscribeEmail : unsubscribeEmail
+				}).success(function(data, status, headers, config) {
+					console.log("success!");
+					console.debug("data: ", data);
+					console.debug("status: ", status);
+					console.debug("headers: ", headers);
+					console.debug("config: ", config);
+					$scope.isSuccess = true;
+					$scope.isFailed = false;
+					$scope.isProcessing = false;
+					$scope.timeRemain = 3;
+					var interval = $interval(function() {
+						if ($scope.timeRemain === 0) {
+							$modalInstance.close(function() {
+								$scope.isSuccess = false;
+								$scope.isFailed = false;
+								$scope.isProcessing = false;
+							});
+							$interval.cancel(interval);
+						}
+						$scope.timeRemain = $scope.timeRemain - 1;
+						console.debug("$scope.timeRemain", $scope.timeRemain);
+					}, 1000);
+				}).error(function(data, status, headers, config) {
+					console.log("failed!");
+					console.debug("data: ", data);
+					console.debug("status: ", status);
+					console.debug("headers: ", headers);
+					console.debug("config: ", config);
+					$scope.isFailed = true;
+					$scope.isSuccess = false;
+					$scope.isProcessing = false;
+				});
+			};
 			$scope.subscribe = function(subscribeEmail, userName, isContactMe,
-					uphoneNumber) {
+					phoneNumber, otherThingsToSay) {
 				$scope.isEnabled = false;
 				$scope.isSuccess = false;
 				$scope.isFailed = false;
@@ -55,7 +97,8 @@ angular.module('webContentApp').controller('UserCtrl', function($scope) {
 					mailAddress : subscribeEmail,
 					userName : userName,
 					contactMeIndicator : isContactMe,
-					phoneNumber : uphoneNumber
+					phoneNumber : phoneNumber,
+					otherThingsToSay : otherThingsToSay
 				}).success(function(data, status, headers, config) {
 					console.log("success!");
 					console.debug("data: ", data);
@@ -106,7 +149,29 @@ angular.module('webContentApp').controller('UserCtrl', function($scope) {
 				// again, and the 2nd time, the value will be undefined
 				if (inputValue == undefined)
 					return ''
-				var transformedInput = inputValue.replace(/[^0-9+.]/g, '');
+				var transformedInput = inputValue.replace(/[^0-9+]/g, '');
+				if (transformedInput != inputValue) {
+					modelCtrl.$setViewValue(transformedInput);
+					modelCtrl.$render();
+				}
+
+				return transformedInput;
+			});
+		}
+	};
+}).directive('noTag', function() {
+	return {
+		require : 'ngModel',
+		link : function(scope, element, attrs, modelCtrl) {
+			modelCtrl.$parsers.push(function(inputValue) {
+				// this next if is necessary for when using ng-required on your
+				// input.
+				// In such cases, when a letter is typed first, this parser will
+				// be called
+				// again, and the 2nd time, the value will be undefined
+				if (inputValue == undefined)
+					return ''
+				var transformedInput = inputValue.replace(/[^<>]/g, '');
 				if (transformedInput != inputValue) {
 					modelCtrl.$setViewValue(transformedInput);
 					modelCtrl.$render();
@@ -117,4 +182,3 @@ angular.module('webContentApp').controller('UserCtrl', function($scope) {
 		}
 	};
 });
-;

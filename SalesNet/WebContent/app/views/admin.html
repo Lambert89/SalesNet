@@ -1,7 +1,9 @@
 <div>
 	<div id="file-upload-div" ng-controller="FileUploadCtrl">
+		<h4>File Upload Section</h4>
 		<div id="file-select-div">
-			<input type="file" nv-file-select="" uploader="uploader" multiple /><br />
+			<input id="fileUploadBtn" type="file" nv-file-select=""
+				uploader="uploader" multiple /><br />
 		</div>
 		<div id="upload-progress-div" ng-show="uploader.queue.length > 0">
 			<table class="table">
@@ -73,6 +75,47 @@
 					<span class="glyphicon glyphicon-trash"></span> Remove all
 				</button>
 			</div>
+
+			<div>
+				<button type="submit" class="btn btn-primary"
+					ng-disabled="!uploader.queue.length||uploadCount<=0||isProcessing">Send
+					Update Notification</button>
+				<div>
+					<alert ng-show="isProcessing">Processing...</alert>
+					<alert type="danger" ng-show="isFailed">Failed!</alert>
+					<alert type="success" ng-show="isSuccess">Success!</alert>
+				</div>
+			</div>
 		</div>
+	</div>
+	<div ng-controller="UserDetailsCtrl">
+		<h4>User Details Section</h4>
+		<label> <input type="checkbox" ng-model="isActiveOnly">
+			Show Active User Only
+		</label> <label> <input type="checkbox" ng-model="withPhoneNumberOnly">
+			With Phone Number Only
+		</label>
+		<table class="table table-bordered table-hover">
+			<tr>
+				<th>Email Address</th>
+				<th>Username</th>
+				<th>Phone Number</th>
+				<th>Comment</th>
+				<th>Active</th>
+			</tr>
+			<tr
+				ng-repeat="userDetail in userDetails | UserDetailsFilter:isActiveOnly:withPhoneNumberOnly"
+				ng-show="userDetails.length > 0 && !isFail">
+				<td>{{userDetail.email}}</td>
+				<td>{{userDetail.username}}</td>
+				<td>{{userDetail.phoneNumber}}</td>
+				<td>{{userDetail.comment}}</td>
+				<td><span class="glyphicon glyphicon-ok"
+					ng-show="userDetail.active"></span><span
+					class="glyphicon glyphicon-remove" ng-show="!userDetail.active"></span></td>
+			</tr>
+		</table>
+		<div ng-show="userDetails.length <= 0 && !isFail">No User Found.</div>
+		<div ng-show="isFail">Fail to load user details.</div>
 	</div>
 </div>
