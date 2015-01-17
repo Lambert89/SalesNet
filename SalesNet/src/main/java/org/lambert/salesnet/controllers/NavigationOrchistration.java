@@ -80,11 +80,6 @@ public class NavigationOrchistration {
 			detail.put("user", user);
 			for (final Comment comment : comments) {
 				final String mailID = comment.getMail();
-				System.out.println("=========================");
-				System.out.println("mailID: " + mailID);
-				System.out.println("mailAddress: " + mailAddress);
-				System.out.println("comment: " + comment.getComment());
-				System.out.println("Date: " + comment.getDate());
 				if (StringUtils.equals(mailAddress, mailID)) {
 					detail.put("comment", comment);
 					break;
@@ -102,9 +97,6 @@ public class NavigationOrchistration {
 
 		final String realPath = request.getSession().getServletContext()
 				.getRealPath("/upload");
-
-		System.out.println("realPath: " + realPath);
-
 		final List<NewDocument> newDocs = new ArrayList<NewDocument>();
 
 		this.persistenceService.updateObjects(DocumentTracker.class, 1L,
@@ -116,8 +108,6 @@ public class NavigationOrchistration {
 						for (final MultipartFile file : files) {
 							String originalFilename = file
 									.getOriginalFilename();
-							System.out.println("originalFilename: "
-									+ originalFilename);
 							FileUtils.copyInputStreamToFile(file
 									.getInputStream(), new File(realPath,
 									originalFilename));
@@ -158,23 +148,11 @@ public class NavigationOrchistration {
 	@RequestMapping(value = "/download/{documentName}", method = RequestMethod.GET)
 	public void downloadDocument(@PathVariable final String documentName,
 			final HttpServletResponse response) throws Exception {
-
-		System.out.println("Testing downloadDocument DocumentName: "
-				+ documentName);
-
 		final DocumentTracker docTracker = this.persistenceService.findObject(
 				DocumentTracker.class, 1L);
-
-		System.out.println("Testing downloadDocument docTraker: " + docTracker
-				+ " with id: " + docTracker.getId());
-
-		System.out.println("during download -> getAllDocumentNames: "
-				+ docTracker.getAllDocumentNames());
 		final String filename = documentName.endsWith(".pdf") ? documentName
 				: documentName.concat(".pdf");
-
 		final String path = docTracker.getDocumentLocation(filename);
-		System.out.println("file path: " + path);
 		final File file = new File(path);
 
 		try {
@@ -199,16 +177,17 @@ public class NavigationOrchistration {
 		}
 	}
 
-	@RequestMapping(value = "/unsubscribe/{mailAddress}", method = RequestMethod.GET)
-	public String unsubscribe(@PathVariable final String mailAddress) {
-		System.out.println("Unsubscribe through mail!");
-		System.out.println("mailAddress: " + mailAddress);
-		return "redirect:/index.html#/unsubscribe#" + mailAddress;
+	@RequestMapping(value = "/unsubscribe/{mailAddress}/*", method = RequestMethod.GET)
+	public String unsubscribe(@PathVariable final String mailAddress,
+			@RequestParam("language") String language) {
+		return "redirect:/index.html?language=" + language + "#/unsubscribe#"
+				+ mailAddress;
 	}
 
 	@RequestMapping(value = "/unsubscribe", method = RequestMethod.POST)
 	public @ResponseBody String unsubscribe(
 			@RequestBody final Map<String, String> body) throws Exception {
+		final String language = body.get("language");
 		final String mailAddress = body.get("unsubscribeEmail");
 		if (StringUtils.isBlank(mailAddress)) {
 			throw new ValidationException("unsubscribeEmail");
@@ -229,7 +208,7 @@ public class NavigationOrchistration {
 			model.put("webUrl", NavigationOrchistration.this.baseUrl);
 			try {
 				this.mailService.sendUnsubscribedNotification(mailAddress,
-						model);
+						model, language);
 			} catch (MessagingException e) {
 				_LOGGER.error("Fail to send unsubscribed notification to {"
 						+ mailAddress + "}.", e);
@@ -243,18 +222,17 @@ public class NavigationOrchistration {
 	public @ResponseBody String subscribe(
 			@RequestBody final Map<String, String> body) throws Exception {
 		String result = "true";
+		final String language = body.get("language");
 		final String mailAddress = body.get("mailAddress");
 		final String userName = body.get("userName");
 		final String phoneNumber = body.get("phoneNumber");
 		final String contactMeIndicator = body.get("contactMeIndicator");
 		final String otherThingsToSay = body.get("otherThingsToSay");
-		System.out.println("mailAddress: " + mailAddress);
-		System.out.println("userName: " + userName);
-		System.out.println("phoneNumber: " + phoneNumber);
-		System.out.println("contactMeIndicator: " + contactMeIndicator);
-		System.out.println("otherThingsToSay: " + otherThingsToSay);
 		if (StringUtils.isBlank(userName)) {
 			throw new ValidationException("userName");
+		}
+		if (StringUtils.isBlank(language)) {
+			throw new ValidationException("[implicit]language");
 		}
 		if (StringUtils.isBlank(mailAddress)) {
 			throw new ValidationException("mailAddress");
@@ -272,6 +250,7 @@ public class NavigationOrchistration {
 		final User user = new User();
 		user.setMail(mailAddress);
 		user.setName(userName);
+		user.setLanguageCode(language);
 		if (StringUtils.isNotBlank(contactMeIndicator)
 				&& "true".equalsIgnoreCase(contactMeIndicator)
 				&& StringUtils.isNotBlank(phoneNumber)) {
@@ -282,8 +261,25 @@ public class NavigationOrchistration {
 			final User exist = this.persistenceService.findObject(User.class,
 					mailAddress);
 			if (exist == null) {
-				System.out.println("new User! " + mailAddress);
 				this.persistenceService.saveObjects(new Object[] { user });
+			} else {
+				this.persistenceService.updateObjects(User.class, mailAddress,
+						new PersistenceService.UpdateOperation<User>() {
+
+							@Override
+							public void update(User object) throws Exception {
+								object.setName(userName);
+								object.setLanguageCode(language);
+								if (StringUtils.isNotBlank(contactMeIndicator)
+										&& "true"
+												.equalsIgnoreCase(contactMeIndicator)
+										&& StringUtils.isNotBlank(phoneNumber)) {
+									object.setContactMeIndicator(true);
+									object.setPhoneNumber(phoneNumber);
+								}
+							}
+
+						});
 			}
 			if (StringUtils.isNotBlank(otherThingsToSay)) {
 				final Comment existComment = this.persistenceService
@@ -312,7 +308,8 @@ public class NavigationOrchistration {
 			final Map<String, Object> model = new HashMap<String, Object>();
 			model.put("webUrl", this.baseUrl);
 			model.put("userName", userName);
-			this.mailService.sendSubscribeConfirmation(mailAddress, model);
+			this.mailService.sendSubscribeConfirmation(mailAddress, model,
+					language);
 		} catch (MessagingException e) {
 			result = "false";
 			throw e;
@@ -345,8 +342,10 @@ public class NavigationOrchistration {
 			for (final User user : users) {
 				final Boolean isActive = user.getIsActive();
 				if (isActive) {
+					final String language = user.getLanguageCode();
 					final String mailDestination = user.getMail();
-					final String encodeAddress = new String(Base64.encodeBase64(mailDestination.getBytes()));
+					final String encodeAddress = new String(
+							Base64.encodeBase64(mailDestination.getBytes()));
 					final Map<String, Object> templateParams = new HashMap<String, Object>();
 					templateParams.put("newsList", newEntries);
 					templateParams.put("webUrl", this.baseUrl);
@@ -354,10 +353,10 @@ public class NavigationOrchistration {
 					templateParams.put("unsubscribeUrl",
 							NavigationOrchistration.this.baseUrl
 									+ "/api/unsubscribe/" + encodeAddress
-									+ "");
+									+ "/?language=" + language);
 					try {
 						this.mailService.sendContentUpdateNotification(
-								mailDestination, templateParams);
+								mailDestination, templateParams, language);
 					} catch (MessagingException e) {
 						_LOGGER.error("Fail to send mail to {"
 								+ mailDestination + "}.", e);

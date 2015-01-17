@@ -1,6 +1,0 @@
-<p>Dear $userName,</p>
-<br/>
-<p>This is a mail as notification that you have successfully unsubscribed from <a href="$webUrl">SalesNet</a>.</p>
-<p>You're welcomed back to <a href="$webUrl">our web site</a> any time.</p>
-<br/>
-<p>Thanks & Regards</p>

@@ -26,58 +26,51 @@
 		<div ng-controller="InterestModalCtrl">
 			<script type="text/ng-template" id="interestModal.html">
 			<div class="modal-body">
-				<tabset> <tab heading="To Subscribe"> <br>
+				<tabset> <tab heading="{{'To Subscribe' | translate}}"> <br>
 				<div>
 					<form class="form-horizontal" name="subscribeForm" novalidate
 						ng-submit="subscribe(subscribeEmail, username, isContactMeIndicator, phoneNumber, otherThingsToSay)">
 						<div class="form-group">
-							<label class="col-sm-4 control-label" for="username">Name:
-							</label>
+							<label class="col-sm-4 control-label" for="username" translate>Name:</label>
 							<div class="col-sm-8">
 								<input id="username" ng-enabled="isEnabled" ng-disabled="!isEnabled" class="form-control"
 									type="text" ng-model="username" name="usernameInput" required
-									ng-maxlength="30" placeholder="please input your name"></input>
+									ng-maxlength="30" placeholder="{{'please input your name' | translate}}"></input>
 								<div ng-show="subscribeForm.usernameInput.$dirty"
 									ng-messages="subscribeForm.usernameInput.$error">
 									<div ng-message="required">
-										<alert type="danger">Please make sure you input
-										username!</alert>
+										<alert type="danger"><span translate>Please make sure you input username!</span></alert>
 									</div>
 									<div ng-message="maxlength">
-										<alert type="danger">Please make sure you don't exceed
-										the maximum length!</alert>
+										<alert type="danger"><span translate>Please make sure you don't exceed the maximum length!</span></alert>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label" for="subscribeEmail">Email:
+							<label class="col-sm-4 control-label" for="subscribeEmail" translate>Email:
 							</label>
 							<div class="col-sm-8">
 								<input id="subscribeEmail1" ng-enabled="isEnabled" ng-disabled="!isEnabled"
 									class="form-control" type="email" ng-model="subscribeEmail"
 									name="subscribeEmailInput" required ng-maxlength="40"
-									placeholder="please input your email"></input>
+									placeholder="{{'please input your email' | translate}}"></input>
 								<div ng-show="subscribeForm.subscribeEmailInput.$dirty"
 									ng-messages="subscribeForm.subscribeEmailInput.$error">
 									<div ng-message="required">
-										<alert type="danger">Please make sure you input email
-										address!</alert>
+										<alert type="danger"><span translate>Please make sure you input email address!</span></alert>
 									</div>
 									<div ng-message="email">
-										<alert type="danger">Please make sure you input valid
-										email address format!</alert>
+										<alert type="danger"><span translate>Please make sure you input valid email address format!</span></alert>
 									</div>
                                     <div ng-message="maxlength">
-									    <alert type="danger">Please make sure you don't exceed
-                                        max length!</alert>
+									    <alert type="danger"><span translate>Please make sure you don't exceed the max length!</span></alert>
 								    </div>
 								</div>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label" for="iscontactMe">Contact
-								Me? </label>
+							<label class="col-sm-4 control-label" for="iscontactMe" translate>Contact Me? </label>
 							<div class="col-sm-8">
 								<div class="controls form-inline">
 									<input id="iscontactMe" ng-enabled="isEnabled" type="checkbox" ng-disabled="!isEnabled"
@@ -87,21 +80,19 @@
 										ng-model="phoneNumber" ng-required="isContactMeIndicator"
 										name="phoneNumberInput" numbers-only ng-maxlength="20"
 										ng-show="isContactMeIndicator"
-										placeholder="Please input your phone number" />
+										placeholder="{{'Please input your phone number' | translate}}" />
 								</div>
 								<div
 									ng-show="subscribeForm.phoneNumberInput.$dirty && isChecked"
 									ng-messages="subscribeForm.phoneNumberInput.$error">
 									<div ng-message="maxlength">
-										<alert type="danger">Please make sure you don't exceed
-										the maximum length!</alert>
+										<alert type="danger"><span translate>Please make sure you don't exceed the maximum length!</span></alert>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label" for="otherThingsToSay">Other
-								Things To Say? </label>
+							<label class="col-sm-4 control-label" for="otherThingsToSay" translate>Other Things To Say? </label>
 							<div class="col-sm-8">
 								<div class="controls form-inline">
 									<textarea id="otherThingsToSay" noTag
@@ -111,57 +102,52 @@
 							</div>
 						</div>
 						<div>
-							<alert ng-show="isProcessing">Processing...</alert>
-							<alert type="success" ng-show="isSuccess">Success!
-							Closing in {{timeRemain}} seconds.</alert>
-							<alert type="danger" ng-show="isFailed">Failed!</alert>
+							<alert ng-show="isProcessing"><span translate>Processing...</span></alert>
+							<alert type="success" ng-show="isSuccess"><span translate>Success! Closing in {{timeRemain}} seconds.</span></alert>
+							<alert type="danger" ng-show="isFailed"><span translate>Failed!</span></alert>
 						</div>
 						<div class="form-group">
 							<div class="col-sm-offset-2 col-sm-10">
 								<button type="submit" ng-disabled="subscribeForm.$invalid || !isEnabled"
-									class="btn btn-primary">Subscribe</button>
+									class="btn btn-primary" translate>Subscribe</button>
 							</div>
 						</div>
 					</form>
 				</div>
-				</tab> <tab heading="To Unsubscribe" active="isUnsubscribe"> <br>
+				</tab> <tab heading="{{'To Unsubscribe' | translate }}" active="isUnsubscribe"> <br>
 				<form class="form-horizontal" name="unsubscribeForm" novalidate
 					ng-submit="unsubscribe(unsubscribeMailAddress)">
 					<div class="form-group">
-						<label class="col-sm-4 control-label" for="unsubscribeMailAddress">Email: </label>
+						<label class="col-sm-4 control-label" for="unsubscribeMailAddress" translate>Email: </label>
 						<div class="col-sm-8">
 							<div class="controls form-inline">
 								<input id="unsubscribeMailAddress" type="email" required
-									ng-enabled="isEnabled" ng-disabled="!isEnabled" ng-model="unsubscribeMailAddress"
+									ng-enabled="isEnabled" ng-disabled="!isEnabled" ng-model="unsubscribeMailAddress" placeholder="{{'Please input your email address' | translate}}"
 									name="unsubscribeMailAddressInput" ng-maxlength="40" />
 							</div>
 							<div ng-show="unsubscribeForm.unsubscribeMailAddressInput.$dirty"
 								ng-messages="unsubscribeForm.unsubscribeMailAddressInput.$error">
 								<div ng-message="required">
-									<alert type="danger">Please make sure you input email
-									address!</alert>
+									<alert type="danger"><span translate>Please make sure you input email address!</span></alert>
 								</div>
 								<div ng-message="email">
-									<alert type="danger">Please make sure you input valid
-									email address format!</alert>
+									<alert type="danger"><span translate>Please make sure you input valid email address format!</span></alert>
 								</div>
                                 <div ng-message="maxlength">
-									<alert type="danger">Please make sure you don't exceed 
-                                    max length!</alert>
+									<alert type="danger"><span translate>Please make sure you don't exceed max length!</span></alert>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
 						<div>
-							<alert ng-show="isProcessing">Processing...</alert>
-							<alert type="success" ng-show="isSuccess">Success!
-							Closing in {{timeRemain}} seconds.</alert>
-							<alert type="danger" ng-show="isFailed">Failed!</alert>
+							<alert ng-show="isProcessing"><span translate>Processing...</span></alert>
+							<alert type="success" ng-show="isSuccess"><span translate>Success! Closing in {{timeRemain}} seconds.</span></alert>
+							<alert type="danger" ng-show="isFailed"><span translate>Failed!</span></alert>
 						</div>
 						<div class="col-sm-offset-2 col-sm-10">
 							<button type="submit" ng-disabled="unsubscribeForm.$invalid || !isEnabled"
-								class="btn btn-danger">Unsubscribe</button>
+								class="btn btn-danger" translate>Unsubscribe</button>
 						</div>
 					</div>
 				</form>
@@ -170,8 +156,13 @@
 		</script>
 			<button class="btn btn-info btn-lg"
 				style="border-radius: 20px; top: 120px; left: -15px; position: fixed; z-index: 10; float: left; text-align: right;"
-				ng-click="open()">Try me!</button>
+				ng-click="open()" translate>Try me!</button>
 		</div>
+                <div ng-controller="LanguageCtrl">
+                    <label translate>Please select your preferred language: </label>
+                    <button type="button" class="btn btn-default" ng-click="checkLanguage('zh')" translate>zh</button>
+                    <button type="button" class="btn btn-default" ng-click="checkLanguage('en')" translate>en</button>
+                </div>
 		<div ng-include="'views/user.html'" ng-controller="UserCtrl"
 			ng-init="init()"></div>
 	</div>
@@ -214,12 +205,14 @@
 	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 	<script src="bower_components/angular-base64/angular-base64.js"></script>
 	<script src="bower_components/angular-base64/angular-base64.min.js"></script>
+	<script src="bower_components/angular-gettext/dist/angular-gettext.js"></script>
 	<!-- endbower -->
 	<!-- endbuild -->
 
 	<!-- build:js({.tmp,app}) scripts/scripts.js -->
 	<script src="scripts/app.js"></script>
 	<script src="scripts/controllers/user.js"></script>
+        <script src="scripts/translations.js"></script>
 	<!-- endbuild -->
 </body>
 </html>

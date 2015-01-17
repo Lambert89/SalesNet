@@ -5,12 +5,16 @@
  * @name webContentApp.controller:UserCtrl
  * @description # UserCtrl Controller of the webContentApp
  */
-angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, $location, $base64) {
+angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, $location, $base64, gettextCatalog) {
 	$scope.init = function() {
-            console.debug("$location", $location);
+            if(location.search) {
+                var languageCode = location.search.replace("?", "").split("=")[1];
+                gettextCatalog.setCurrentLanguage(languageCode);
+            }else {
+               location.search = "?language=" + gettextCatalog.currentLanguage;
+            }
             if($location.$$path === "/unsubscribe") {
                 var targetMail = $base64.decode($location.$$hash);
-                console.debug("targetMail: ", targetMail);
                 $scope.isUnsubscribe = true;
                 var modalInstance = $modal.open({
 		    templateUrl : 'interestModal.html',
@@ -22,17 +26,18 @@ angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, 
                         },
                         unsubscribeMail : function() {
                             return targetMail;
+                        },
+                        gettextCatalog : function() {
+                            return gettextCatalog;
                         }
                     }
 	        });
-                console.debug("modalInstance: ", modalInstance);
             }
         }
 }).controller(
 		"ViewerCtrl",
 		function($scope, $http, $element) {
 			$scope.generateUrl = function(baseUrl, documentName, $event) {
-				console.log("clicking the link: " + documentName);
 				$scope.previewDocumentUrl = baseUrl
 						+ "/ViewerJS/#../api/download/" + documentName;
 				$($element).find("iframe")[0].contentWindow.location.reload();
@@ -50,7 +55,7 @@ angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, 
 					}).error(function(data, status, headers, config) {
 				$scope.isError = true;
 			});
-		}).controller('InterestModalCtrl', function($scope, $modal) {
+		}).controller('InterestModalCtrl', function($scope, $modal, gettextCatalog) {
 	$scope.open = function() {
 		var modalInstance = $modal.open({
 			templateUrl : 'interestModal.html',
@@ -61,6 +66,9 @@ angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, 
                             },
                             unsubscribeMail : function() {
                                 return null;
+                            },
+                            gettextCatalog : function() {
+                                return gettextCatalog;
                             }
                         }
 		});
@@ -70,7 +78,7 @@ angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, 
 	};
 }).controller(
 		'ModalInstanceCtrl',
-		function($scope, $modalInstance, $http, $interval, isUnsubscribe, unsubscribeMail) {
+		function($scope, $modalInstance, $http, $interval, isUnsubscribe, unsubscribeMail, gettextCatalog) {
                         if(isUnsubscribe) {
                             $scope.isUnsubscribe = true;
                             $scope.unsubscribeMailAddress = unsubscribeMail;
@@ -85,13 +93,9 @@ angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, 
 				var targetUrl = location.href.replace("index.html",
 						"api/unsubscribe");
 				$http.post(targetUrl, {
-					unsubscribeEmail : unsubscribeEmail
+					unsubscribeEmail : unsubscribeEmail,
+                                        language : gettextCatalog.currentLanguage
 				}).success(function(data, status, headers, config) {
-					console.log("success!");
-					console.debug("data: ", data);
-					console.debug("status: ", status);
-					console.debug("headers: ", headers);
-					console.debug("config: ", config);
 					$scope.isSuccess = true;
 					$scope.isFailed = false;
 					$scope.isProcessing = false;
@@ -106,14 +110,8 @@ angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, 
 							$interval.cancel(interval);
 						}
 						$scope.timeRemain = $scope.timeRemain - 1;
-						console.debug("$scope.timeRemain", $scope.timeRemain);
 					}, 1000);
 				}).error(function(data, status, headers, config) {
-					console.log("failed!");
-					console.debug("data: ", data);
-					console.debug("status: ", status);
-					console.debug("headers: ", headers);
-					console.debug("config: ", config);
 					$scope.isFailed = true;
 					$scope.isSuccess = false;
 					$scope.isProcessing = false;
@@ -125,7 +123,6 @@ angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, 
 				$scope.isSuccess = false;
 				$scope.isFailed = false;
 				$scope.isProcessing = true;
-				console.debug("subscribeEmail: ", subscribeEmail);
 				var targetUrl = location.href.replace("index.html",
 						"api/subscribe");
 				$http.post(targetUrl, {
@@ -133,13 +130,9 @@ angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, 
 					userName : userName,
 					contactMeIndicator : isContactMe,
 					phoneNumber : phoneNumber,
-					otherThingsToSay : otherThingsToSay
+					otherThingsToSay : otherThingsToSay,
+                                        language : gettextCatalog.currentLanguage
 				}).success(function(data, status, headers, config) {
-					console.log("success!");
-					console.debug("data: ", data);
-					console.debug("status: ", status);
-					console.debug("headers: ", headers);
-					console.debug("config: ", config);
 					$scope.isSuccess = true;
 					$scope.isFailed = false;
 					$scope.isProcessing = false;
@@ -154,19 +147,12 @@ angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, 
 							$interval.cancel(interval);
 						}
 						$scope.timeRemain = $scope.timeRemain - 1;
-						console.debug("$scope.timeRemain", $scope.timeRemain);
 					}, 1000);
 				}).error(function(data, status, headers, config) {
-					console.log("failed!");
-					console.debug("data: ", data);
-					console.debug("status: ", status);
-					console.debug("headers: ", headers);
-					console.debug("config: ", config);
 					$scope.isFailed = true;
 					$scope.isSuccess = false;
 					$scope.isProcessing = false;
 				});
-				console.debug("$modalInstance", $modalInstance);
 			};
 			$scope.isEnabled = true;
 			$scope.isProcessing = false;

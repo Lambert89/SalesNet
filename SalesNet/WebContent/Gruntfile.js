@@ -351,7 +351,24 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+    
+    nggettext_extract: {
+    	pot: {
+    	    files: {
+    	        'po/template.pot': ['app/*.html', 'app/views/*.html']
+    	    }
+    	}
+    },
+
+    nggettext_compile : {
+        all: {
+            files: {
+                'app/scripts/translations.js': ['po/*.po']
+            }
+        }
     }
+    
   });
 
 
@@ -404,5 +421,13 @@ module.exports = function (grunt) {
     'newer:jshint',
     'test',
     'build'
+  ]);
+
+  grunt.registerTask('translate-extract', [
+    'nggettext_extract'
+  ]);
+
+  grunt.registerTask('translate-compile', [
+    'nggettext_compile'
   ]);
 };

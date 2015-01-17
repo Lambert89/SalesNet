@@ -21,59 +21,63 @@ public class MailService {
 	private MessageSource mailMessageSource;
 
 	public void sendSubscribeConfirmation(final String mailDestination,
-			final Map<String, Object> model) throws MessagingException {
+			final Map<String, Object> model, final String languageCode)
+			throws MessagingException {
 		final MimeMessage message = this.mailSender.createMimeMessage();
 		final MimeMessageHelper helper = new MimeMessageHelper(message, false,
 				"UTF-8");
 		helper.setTo(mailDestination);
 		helper.setFrom(this.mailMessageSource.getMessage("mail.from", null,
-				Locale.getDefault()));
+				new Locale(languageCode)));
 
 		String text = VelocityEngineUtils.mergeTemplateIntoString(
-				this.getVelocityEngine(), "content/subscribeConfirmation.vm",
-				"UTF-8", model);
+				this.getVelocityEngine(), "/content/templates/" + languageCode
+						+ "/subscribeConfirmation.vm", "UTF-8", model);
 		helper.setText(text, true);
 		helper.setSubject(this.mailMessageSource.getMessage(
-				"mail.subscribeCofirmationSubject", null, Locale.getDefault()));
+				"mail.subscribeCofirmationSubject", null, new Locale(
+						languageCode)));
 
 		this.mailSender.send(message);
 	}
 
 	public void sendUnsubscribedNotification(final String mailDestination,
-			final Map<String, Object> model) throws MessagingException {
+			final Map<String, Object> model, final String languageCode)
+			throws MessagingException {
 		final MimeMessage message = this.mailSender.createMimeMessage();
 		final MimeMessageHelper helper = new MimeMessageHelper(message, false,
 				"UTF-8");
 		helper.setTo(mailDestination);
 		helper.setFrom(this.mailMessageSource.getMessage("mail.from", null,
-				Locale.getDefault()));
+				new Locale(languageCode)));
 
 		String text = VelocityEngineUtils.mergeTemplateIntoString(
-				this.getVelocityEngine(),
-				"content/unsubscribedNotification.vm", "UTF-8", model);
+				this.getVelocityEngine(), "/content/templates/" + languageCode
+						+ "/unsubscribedNotification.vm", "UTF-8", model);
 		helper.setText(text, true);
 		helper.setSubject(this.mailMessageSource.getMessage(
-				"mail.unsubscribedNotificationSubject", null,
-				Locale.getDefault()));
+				"mail.unsubscribedNotificationSubject", null, new Locale(
+						languageCode)));
 
 		this.mailSender.send(message);
 	}
 
 	public void sendContentUpdateNotification(final String mailDestination,
-			final Map<String, Object> model) throws MessagingException {
+			final Map<String, Object> model, final String languageCode)
+			throws MessagingException {
 		final MimeMessage message = this.mailSender.createMimeMessage();
 		final MimeMessageHelper helper = new MimeMessageHelper(message, false,
 				"UTF-8");
 		helper.setTo(mailDestination);
 		helper.setFrom(this.mailMessageSource.getMessage("mail.from", null,
-				Locale.getDefault()));
+				new Locale(languageCode)));
 
 		String text = VelocityEngineUtils.mergeTemplateIntoString(
-				this.getVelocityEngine(),
-				"content/contentUpdateConfirmation.vm", "UTF-8", model);
+				this.getVelocityEngine(), "/content/templates/" + languageCode
+						+ "/contentUpdateConfirmation.vm", "UTF-8", model);
 		helper.setText(text, true);
 		helper.setSubject(this.mailMessageSource.getMessage(
-				"mail.contentUpdateSubject", null, Locale.getDefault()));
+				"mail.contentUpdateSubject", null, new Locale(languageCode)));
 
 		this.mailSender.send(message);
 	}

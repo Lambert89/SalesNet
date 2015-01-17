@@ -15,7 +15,8 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<context:property-placeholder order="0"
-		location="classpath:/content/mail.properties" ignore-unresolvable="true" />
+		location="file:${user.dir}/content/props/mail.properties"
+		ignore-unresolvable="true" />
 
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="${mail.host}" />
@@ -34,8 +35,9 @@
 		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
 		<property name="velocityProperties">
 			<value>
-				resource.loader=class
-				class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+			    file.resource.loader.path=${user.dir}
+				resource.loader=file
+				class.resource.loader.class=org.apache.velocity.runtime.resource.loader.FileResourceLoader
 			</value>
 		</property>
 	</bean>
@@ -44,7 +46,7 @@
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames">
 			<list>
-				<value>classpath:/content/mail</value>
+				<value>file:${user.dir}/content/props/mail</value>
 			</list>
 		</property>
 		<property name="defaultEncoding" value="UTF-8" />

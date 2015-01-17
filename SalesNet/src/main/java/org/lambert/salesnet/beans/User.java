@@ -26,6 +26,8 @@ public class User implements Serializable {
 
 	private Boolean isActive = Boolean.TRUE;
 
+	private String languageCode;
+
 	/**
 	 * @return the name
 	 */
@@ -92,5 +94,13 @@ public class User implements Serializable {
 
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
+	}
+
+	public String getLanguageCode() {
+		return languageCode;
+	}
+
+	public void setLanguageCode(String languageCode) {
+		this.languageCode = languageCode;
 	}
 }

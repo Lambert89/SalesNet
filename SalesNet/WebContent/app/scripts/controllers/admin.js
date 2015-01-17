@@ -28,10 +28,12 @@ angular
 										function(data, status, headers, config) {
 											$scope.isProcessing = false;
 											$scope.isSuccess = true;
+                                                                                        $scope.uploadCount = 0;
 										})
 								.error(function(data, status, headers, config) {
 									$scope.isProcessing = false;
 									$scope.isFail = true;
+                                                                        $scope.uploadCount = 0;
 								});
 					}
 
@@ -51,41 +53,20 @@ angular
 
 					uploader.onWhenAddingFileFailed = function(
 							item /* {File|FileLikeObject} */, filter, options) {
-						console.info('onWhenAddingFileFailed', item, filter,
-								options);
 						SweetAlert
 								.swal(
 										'Oops...',
 										'Only PDF files are support! Please ensure you only choose file with "pdf" as extension.',
 										'error');
 					};
-					uploader.onAfterAddingFile = function(fileItem) {
-						console.info('onAfterAddingFile', fileItem);
-					};
-					uploader.onAfterAddingAll = function(addedFileItems) {
-						console.info('onAfterAddingAll', addedFileItems);
-					};
-					uploader.onBeforeUploadItem = function(item) {
-						console.info('onBeforeUploadItem', item);
-					};
-					uploader.onProgressItem = function(fileItem, progress) {
-						console.info('onProgressItem', fileItem, progress);
-					};
-					uploader.onProgressAll = function(progress) {
-						console.info('onProgressAll', progress);
-					};
 					uploader.onSuccessItem = function(fileItem, response,
 							status, headers) {
-						console.info('onSuccessItem', fileItem, response,
-								status, headers);
 						SweetAlert.swal('Congratulations!',
 								'File Upload Success!', 'success');
 						$scope.uploadCount++;
 					};
 					uploader.onErrorItem = function(fileItem, response, status,
 							headers) {
-						console.info('onErrorItem', fileItem, response, status,
-								headers);
 						SweetAlert.swal('Oops...',
 								'Something went wrong! Upload failded.',
 								'error');
@@ -101,20 +82,8 @@ angular
 							confirmButtonText : 'Yes, cancell it!'
 						}, function() {
 							SweetAlert.swal('Cancell!');
-							console.info('onCancelItem', fileItem, response,
-									status, headers);
 						});
 					};
-					uploader.onCompleteItem = function(fileItem, response,
-							status, headers) {
-						console.info('onCompleteItem', fileItem, response,
-								status, headers);
-					};
-					uploader.onCompleteAll = function() {
-						console.info('onCompleteAll');
-					};
-
-					console.info('uploader', uploader);
 				})
 		.controller(
 				"UserDetailsCtrl",

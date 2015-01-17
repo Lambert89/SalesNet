@@ -121,7 +121,6 @@ public class PersistenceService implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (this.findObject(DocumentTracker.class, 1L) == null) {
-			System.out.println("Initializing singleton DocumentTracker");
 			this.saveObjects(new Object[] { new DocumentTracker() });
 		}
 	}

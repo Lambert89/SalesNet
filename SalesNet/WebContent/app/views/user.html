@@ -2,15 +2,15 @@
 	<div class="col-md-4">
 		<div ng-show="!isError">
 			<div ng-show="documents.length > 0">
-				<div>Documents Available As below, click to view more details:</div>
+				<div translate>Documents Available As below, click to view more details:</div>
 				<div ng-repeat="document in documents">
 					<a ng-href="javascript:void"
 						ng-click="generateUrl(baseUrl, document, $event)">{{document}}</a>
 				</div>
 			</div>
-			<div ng-show="documents.length <= 0">No documents found.</div>
+			<div ng-show="documents.length <= 0" translate>No documents found.</div>
 		</div>
-		<div ng-show="isError">Fail to retrieve documents!</div>
+		<div ng-show="isError" translate>Fail to retrieve documents!</div>
 	</div>
 	<div class="col-md-8" ng-show="documents.length > 0">
 		<iframe ng-src="{{previewDocumentUrl}}" width="700px" height="800px"
