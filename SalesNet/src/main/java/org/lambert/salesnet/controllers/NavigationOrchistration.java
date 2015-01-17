@@ -20,6 +20,7 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.lambert.salesnet.beans.Comment;
@@ -201,7 +202,8 @@ public class NavigationOrchistration {
 	@RequestMapping(value = "/unsubscribe/{mailAddress}", method = RequestMethod.GET)
 	public String unsubscribe(@PathVariable final String mailAddress) {
 		System.out.println("Unsubscribe through mail!");
-		return "redirect:/index.html#mailAddress";
+		System.out.println("mailAddress: " + mailAddress);
+		return "redirect:/index.html#/unsubscribe#" + mailAddress;
 	}
 
 	@RequestMapping(value = "/unsubscribe", method = RequestMethod.POST)
@@ -344,13 +346,15 @@ public class NavigationOrchistration {
 				final Boolean isActive = user.getIsActive();
 				if (isActive) {
 					final String mailDestination = user.getMail();
+					final String encodeAddress = new String(Base64.encodeBase64(mailDestination.getBytes()));
 					final Map<String, Object> templateParams = new HashMap<String, Object>();
 					templateParams.put("newsList", newEntries);
 					templateParams.put("webUrl", this.baseUrl);
 					templateParams.put("userName", user.getName());
 					templateParams.put("unsubscribeUrl",
 							NavigationOrchistration.this.baseUrl
-									+ "/api/unsubscribe/" + mailDestination);
+									+ "/api/unsubscribe/" + encodeAddress
+									+ "");
 					try {
 						this.mailService.sendContentUpdateNotification(
 								mailDestination, templateParams);

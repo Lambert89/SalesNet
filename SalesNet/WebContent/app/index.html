@@ -1,66 +1,225 @@
 <!doctype html>
 <html class="no-js">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(.) styles/vendor.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/sweetalert/lib/sweet-alert.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <!-- endbuild -->
-  </head>
-  <body ng-app="webContentApp">
-    <!--[if lt IE 7]>
+<head>
+<meta charset="utf-8">
+<title></title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<!-- build:css(.) styles/vendor.css -->
+<!-- bower:css -->
+<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+<link rel="stylesheet" href="bower_components/sweetalert/lib/sweet-alert.css" />
+<!-- endbower -->
+<!-- endbuild -->
+<!-- build:css(.tmp) styles/main.css -->
+<link rel="stylesheet" href="styles/main.css">
+<!-- endbuild -->
+</head>
+<body ng-app="webContentApp">
+	<!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <!-- Add your site or application content here -->
-    <div class="container">
-      <div ng-include="'views/user.html'" ng-controller="UserCtrl"></div>
-    </div>
+	<!-- Add your site or application content here -->
+	<div class="container">
+		<div ng-controller="InterestModalCtrl">
+			<script type="text/ng-template" id="interestModal.html">
+			<div class="modal-body">
+				<tabset> <tab heading="To Subscribe"> <br>
+				<div>
+					<form class="form-horizontal" name="subscribeForm" novalidate
+						ng-submit="subscribe(subscribeEmail, username, isContactMeIndicator, phoneNumber, otherThingsToSay)">
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="username">Name:
+							</label>
+							<div class="col-sm-8">
+								<input id="username" ng-enabled="isEnabled" ng-disabled="!isEnabled" class="form-control"
+									type="text" ng-model="username" name="usernameInput" required
+									ng-maxlength="30" placeholder="please input your name"></input>
+								<div ng-show="subscribeForm.usernameInput.$dirty"
+									ng-messages="subscribeForm.usernameInput.$error">
+									<div ng-message="required">
+										<alert type="danger">Please make sure you input
+										username!</alert>
+									</div>
+									<div ng-message="maxlength">
+										<alert type="danger">Please make sure you don't exceed
+										the maximum length!</alert>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="subscribeEmail">Email:
+							</label>
+							<div class="col-sm-8">
+								<input id="subscribeEmail1" ng-enabled="isEnabled" ng-disabled="!isEnabled"
+									class="form-control" type="email" ng-model="subscribeEmail"
+									name="subscribeEmailInput" required ng-maxlength="40"
+									placeholder="please input your email"></input>
+								<div ng-show="subscribeForm.subscribeEmailInput.$dirty"
+									ng-messages="subscribeForm.subscribeEmailInput.$error">
+									<div ng-message="required">
+										<alert type="danger">Please make sure you input email
+										address!</alert>
+									</div>
+									<div ng-message="email">
+										<alert type="danger">Please make sure you input valid
+										email address format!</alert>
+									</div>
+                                    <div ng-message="maxlength">
+									    <alert type="danger">Please make sure you don't exceed
+                                        max length!</alert>
+								    </div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="iscontactMe">Contact
+								Me? </label>
+							<div class="col-sm-8">
+								<div class="controls form-inline">
+									<input id="iscontactMe" ng-enabled="isEnabled" type="checkbox" ng-disabled="!isEnabled"
+										ng-model="isContactMeIndicator" name="isContactMeInput"
+										ng-true-value="true" /> <input id="phoneNumber"
+										ng-enabled="isEnabled" ng-disabled="!isEnabled" class="form-control" type="text"
+										ng-model="phoneNumber" ng-required="isContactMeIndicator"
+										name="phoneNumberInput" numbers-only ng-maxlength="20"
+										ng-show="isContactMeIndicator"
+										placeholder="Please input your phone number" />
+								</div>
+								<div
+									ng-show="subscribeForm.phoneNumberInput.$dirty && isChecked"
+									ng-messages="subscribeForm.phoneNumberInput.$error">
+									<div ng-message="maxlength">
+										<alert type="danger">Please make sure you don't exceed
+										the maximum length!</alert>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="otherThingsToSay">Other
+								Things To Say? </label>
+							<div class="col-sm-8">
+								<div class="controls form-inline">
+									<textarea id="otherThingsToSay" noTag
+										class="form-control" rows="6" ng-enabled="isEnabled" ng-disabled="!isEnabled"
+										ng-model="otherThingsToSay" name="otherThingsToSay" />
+								</div>
+							</div>
+						</div>
+						<div>
+							<alert ng-show="isProcessing">Processing...</alert>
+							<alert type="success" ng-show="isSuccess">Success!
+							Closing in {{timeRemain}} seconds.</alert>
+							<alert type="danger" ng-show="isFailed">Failed!</alert>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<button type="submit" ng-disabled="subscribeForm.$invalid || !isEnabled"
+									class="btn btn-primary">Subscribe</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				</tab> <tab heading="To Unsubscribe" active="isUnsubscribe"> <br>
+				<form class="form-horizontal" name="unsubscribeForm" novalidate
+					ng-submit="unsubscribe(unsubscribeMailAddress)">
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="unsubscribeMailAddress">Email: </label>
+						<div class="col-sm-8">
+							<div class="controls form-inline">
+								<input id="unsubscribeMailAddress" type="email" required
+									ng-enabled="isEnabled" ng-disabled="!isEnabled" ng-model="unsubscribeMailAddress"
+									name="unsubscribeMailAddressInput" ng-maxlength="40" />
+							</div>
+							<div ng-show="unsubscribeForm.unsubscribeMailAddressInput.$dirty"
+								ng-messages="unsubscribeForm.unsubscribeMailAddressInput.$error">
+								<div ng-message="required">
+									<alert type="danger">Please make sure you input email
+									address!</alert>
+								</div>
+								<div ng-message="email">
+									<alert type="danger">Please make sure you input valid
+									email address format!</alert>
+								</div>
+                                <div ng-message="maxlength">
+									<alert type="danger">Please make sure you don't exceed 
+                                    max length!</alert>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div>
+							<alert ng-show="isProcessing">Processing...</alert>
+							<alert type="success" ng-show="isSuccess">Success!
+							Closing in {{timeRemain}} seconds.</alert>
+							<alert type="danger" ng-show="isFailed">Failed!</alert>
+						</div>
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="submit" ng-disabled="unsubscribeForm.$invalid || !isEnabled"
+								class="btn btn-danger">Unsubscribe</button>
+						</div>
+					</div>
+				</form>
+				</tab> </tabset>
+			</div>
+		</script>
+			<button class="btn btn-info btn-lg"
+				style="border-radius: 20px; top: 120px; left: -15px; position: fixed; z-index: 10; float: left; text-align: right;"
+				ng-click="open()">Try me!</button>
+		</div>
+		<div ng-include="'views/user.html'" ng-controller="UserCtrl"
+			ng-init="init()"></div>
+	</div>
 
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+	<script>
+		(function(i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r;
+			i[r] = i[r] || function() {
+				(i[r].q = i[r].q || []).push(arguments)
+			}, i[r].l = 1 * new Date();
+			a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore(a, m)
+		})(window, document, 'script',
+				'//www.google-analytics.com/analytics.js', 'ga');
 
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script>
+		ga('create', 'UA-XXXXX-X');
+		ga('send', 'pageview');
+	</script>
 
-    <!-- build:js(.) scripts/oldieshim.js -->
-    <!--[if lt IE 9]>
+	<!-- build:js(.) scripts/oldieshim.js -->
+	<!--[if lt IE 9]>
     <script src="bower_components/es5-shim/es5-shim.js"></script>
     <script src="bower_components/json3/lib/json3.js"></script>
     <![endif]-->
-    <!-- endbuild -->
+	<!-- endbuild -->
 
-    <!-- build:js(.) scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/angular-messages/angular-messages.js"></script>
-    <script src="bower_components/angular-file-upload/angular-file-upload.js"></script>
-    <script src="bower_components/sweetalert/lib/sweet-alert.js"></script>
-    <script src="bower_components/angular-sweetalert/SweetAlert.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
+	<!-- build:js(.) scripts/vendor.js -->
+	<!-- bower:js -->
+	<script src="bower_components/jquery/dist/jquery.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="bower_components/angular-messages/angular-messages.js"></script>
+	<script src="bower_components/angular-file-upload/angular-file-upload.js"></script>
+	<script src="bower_components/sweetalert/lib/sweet-alert.js"></script>
+	<script src="bower_components/angular-sweetalert/SweetAlert.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+	<script src="bower_components/angular-base64/angular-base64.js"></script>
+	<script src="bower_components/angular-base64/angular-base64.min.js"></script>
+	<!-- endbower -->
+	<!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/user.js"></script>
-        <!-- endbuild -->
+	<!-- build:js({.tmp,app}) scripts/scripts.js -->
+	<script src="scripts/app.js"></script>
+	<script src="scripts/controllers/user.js"></script>
+	<!-- endbuild -->
 </body>
 </html>

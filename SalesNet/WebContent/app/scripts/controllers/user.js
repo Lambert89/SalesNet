@@ -5,8 +5,29 @@
  * @name webContentApp.controller:UserCtrl
  * @description # UserCtrl Controller of the webContentApp
  */
-angular.module('webContentApp').controller('UserCtrl', function($scope) {
-	$scope.awesomeThings = [ 'HTML5 Boilerplate', 'AngularJS', 'Karma' ];
+angular.module('webContentApp').controller('UserCtrl', function($scope, $modal, $location, $base64) {
+	$scope.init = function() {
+            console.debug("$location", $location);
+            if($location.$$path === "/unsubscribe") {
+                var targetMail = $base64.decode($location.$$hash);
+                console.debug("targetMail: ", targetMail);
+                $scope.isUnsubscribe = true;
+                var modalInstance = $modal.open({
+		    templateUrl : 'interestModal.html',
+		    controller : 'ModalInstanceCtrl',
+                    scope : $scope,
+                    resolve: {
+                        isUnsubscribe: function () {
+                            return $scope.isUnsubscribe;
+                        },
+                        unsubscribeMail : function() {
+                            return targetMail;
+                        }
+                    }
+	        });
+                console.debug("modalInstance: ", modalInstance);
+            }
+        }
 }).controller(
 		"ViewerCtrl",
 		function($scope, $http, $element) {
@@ -33,7 +54,15 @@ angular.module('webContentApp').controller('UserCtrl', function($scope) {
 	$scope.open = function() {
 		var modalInstance = $modal.open({
 			templateUrl : 'interestModal.html',
-			controller : 'ModalInstanceCtrl'
+			controller : 'ModalInstanceCtrl',
+                        resolve: {
+                            isUnsubscribe: function () {
+                                return false;
+                            },
+                            unsubscribeMail : function() {
+                                return null;
+                            }
+                        }
 		});
 		modalInstance.result.then(function(teardown) {
 			teardown();
@@ -41,7 +70,13 @@ angular.module('webContentApp').controller('UserCtrl', function($scope) {
 	};
 }).controller(
 		'ModalInstanceCtrl',
-		function($scope, $modalInstance, $http, $interval) {
+		function($scope, $modalInstance, $http, $interval, isUnsubscribe, unsubscribeMail) {
+                        if(isUnsubscribe) {
+                            $scope.isUnsubscribe = true;
+                            $scope.unsubscribeMailAddress = unsubscribeMail;
+                        }else {
+                            $scope.isUnsubscribe = false;
+                        }
 			$scope.unsubscribe = function(unsubscribeEmail) {
 				$scope.isEnabled = false;
 				$scope.isSuccess = false;
