@@ -1,0 +1,124 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+
+#: app/index.html:73
+msgid "Contact Me?"
+msgstr ""
+
+#: app/views/user.html:5
+msgid "Documents Available As below, click to view more details:"
+msgstr ""
+
+#: app/index.html:121
+#: app/index.html:51
+msgid "Email:"
+msgstr ""
+
+#: app/views/user.html:13
+msgid "Fail to retrieve documents!"
+msgstr ""
+
+#: app/index.html:107
+#: app/index.html:146
+msgid "Failed!"
+msgstr ""
+
+#: app/index.html:34
+msgid "Name:"
+msgstr ""
+
+#: app/views/user.html:11
+msgid "No documents found."
+msgstr ""
+
+#: app/index.html:95
+msgid "Other Things To Say?"
+msgstr ""
+
+#: app/index.html:125
+msgid "Please input your email address"
+msgstr ""
+
+#: app/index.html:83
+msgid "Please input your phone number"
+msgstr ""
+
+#: app/index.html:137
+msgid "Please make sure you don't exceed max length!"
+msgstr ""
+
+#: app/index.html:67
+msgid "Please make sure you don't exceed the max length!"
+msgstr ""
+
+#: app/index.html:45
+#: app/index.html:89
+msgid "Please make sure you don't exceed the maximum length!"
+msgstr ""
+
+#: app/index.html:131
+#: app/index.html:61
+msgid "Please make sure you input email address!"
+msgstr ""
+
+#: app/index.html:42
+msgid "Please make sure you input username!"
+msgstr ""
+
+#: app/index.html:134
+#: app/index.html:64
+msgid "Please make sure you input valid email address format!"
+msgstr ""
+
+#: app/index.html:162
+msgid "Please select your preferred language:"
+msgstr ""
+
+#: app/index.html:105
+#: app/index.html:144
+msgid "Processing..."
+msgstr ""
+
+#: app/index.html:111
+msgid "Subscribe"
+msgstr ""
+
+#: app/index.html:106
+#: app/index.html:145
+msgid "Success! Closing in {{timeRemain}} seconds."
+msgstr ""
+
+#: app/index.html:29
+msgid "To Subscribe"
+msgstr ""
+
+#: app/index.html:117
+msgid "To Unsubscribe"
+msgstr ""
+
+#: app/index.html:157
+msgid "Try me!"
+msgstr ""
+
+#: app/index.html:149
+msgid "Unsubscribe"
+msgstr ""
+
+#: app/index.html:164
+msgid "en"
+msgstr ""
+
+#: app/index.html:57
+msgid "please input your email"
+msgstr ""
+
+#: app/index.html:38
+msgid "please input your name"
+msgstr ""
+
+#: app/index.html:163
+msgid "zh"
+msgstr ""
